@@ -8,7 +8,11 @@ import { useState } from "react";
 export default function NoteClient() {
   const [page, setPage] = useState(1);
   const [query, setQuery] = useState("");
-  const { data: notesData, isLoading } = useQuery({
+  const {
+    data: notesData,
+    isLoading,
+    isError,
+  } = useQuery({
     queryKey: ["notes", query, page],
     queryFn: () => fetchNotes(query, page),
     placeholderData: keepPreviousData,
@@ -17,7 +21,8 @@ export default function NoteClient() {
   return (
     <>
       {isLoading && <p>Loading your notes...</p>}
-      {!isLoading && notesData && (
+      {isError && <p>Sorry, error happened...</p>}
+      {!isLoading && !isError && notesData && (
         <App
           setPage={setPage}
           setQuery={setQuery}
